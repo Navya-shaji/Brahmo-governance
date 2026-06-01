@@ -114,7 +114,7 @@
       "id": "N-M02",
       "org_id": "supra",
       "hierarchy_level_id": "HL-05-MED",
-      "type": "DECISION",
+      "type": "CONSTRAINT",
       "title": "Sepsis Protocol v1 (2022)",
       "content": "Supra Sepsis Bundle v1 (2022): lactate within 6 hours, antibiotics within 4 hours.",
       "importance": 0.9,
@@ -134,7 +134,7 @@
       "content": "Supra Sepsis Bundle v2 (2024): blood cultures before antibiotics, lactate within 3 HOURS, 30mL/kg crystalloid for hypotension.",
       "importance": 0.95,
       "status": "SUPERSEDED",
-      "superseded_by": "N-M881",
+      "superseded_by": "N-M465",
       "department": "medicine",
       "valid_until": null,
       "created_by": "U-MEERA",
@@ -219,7 +219,7 @@
       "id": "N-DRV-06",
       "org_id": "supra",
       "hierarchy_level_id": "HL-10-MED",
-      "type": "DECISION",
+      "type": "CONSTRAINT",
       "title": "Pharmacy Pre-Auth for IV Antibiotics",
       "content": "Per Sepsis v2 timing: pharmacy pre-authorizes Pip-Tazo for suspected sepsis. No approval delay within 3-hour window.",
       "importance": 0.72,
@@ -324,9 +324,9 @@
       "id": "N-M04",
       "org_id": "supra",
       "hierarchy_level_id": "HL-08-MED",
-      "type": "FACT",
-      "title": "HbA1c Monitoring Standard",
-      "content": "Fasting glucose levels are not sufficient. Order HbA1c tests every 3 months for diabetic patients.",
+      "type": "ANTI_PATTERN",
+      "title": "Fasting Glucose Only for Diabetic Monitoring",
+      "content": "Do NOT rely on fasting glucose alone for diabetic monitoring. Always order HbA1c every 3 months.",
       "importance": 0.8,
       "status": "ACTIVE",
       "superseded_by": null,
@@ -411,7 +411,7 @@
       "created_at": "2024-07-01T09:00:00+05:30"
     },
     {
-      "id": "N-M881",
+      "id": "N-M465",
       "org_id": "supra",
       "hierarchy_level_id": "HL-05-MED",
       "type": "DECISION",
@@ -423,7 +423,7 @@
       "department": "medicine",
       "valid_until": null,
       "created_by": "U-MEERA",
-      "created_at": "2026-05-30T07:46:46.713Z"
+      "created_at": "2026-06-01T10:06:48.694Z"
     }
   ],
   "edges": [
@@ -533,11 +533,11 @@
       "created_at": "2024-03-01T10:00:00+05:30"
     },
     {
-      "id": "E-276XV1Z",
-      "source_id": "N-M881",
+      "id": "E-CTZKY3A",
+      "source_id": "N-M465",
       "target_id": "N-M08",
       "edge_type": "SUPERSEDES",
-      "created_at": "2026-05-30T07:46:46.715Z"
+      "created_at": "2026-06-01T10:06:48.702Z"
     }
   ],
   "audit_log": [
@@ -572,15 +572,15 @@
       "new_value": "SUPERSEDED",
       "actor_id": "U-MEERA",
       "org_id": "supra",
-      "reason": "Superseded by new node N-M881",
+      "reason": "Superseded by new node N-M465",
       "metadata": {
-        "new_node_id": "N-M881"
+        "new_node_id": "N-M465"
       },
-      "id": "A-HWOSANH",
-      "timestamp": "2026-05-30T07:46:46.717Z"
+      "id": "A-WD9YADU",
+      "timestamp": "2026-06-01T10:06:48.709Z"
     },
     {
-      "node_id": "N-M881",
+      "node_id": "N-M465",
       "action": "CREATE",
       "old_value": null,
       "new_value": "ACTIVE",
@@ -590,8 +590,8 @@
       "metadata": {
         "supersedes_node_id": "N-M08"
       },
-      "id": "A-6UPUA8V",
-      "timestamp": "2026-05-30T07:46:46.719Z"
+      "id": "A-M2CTK4M",
+      "timestamp": "2026-06-01T10:06:48.712Z"
     },
     {
       "node_id": "N-M08",
@@ -600,12 +600,12 @@
       "new_value": "SUPERSEDED",
       "actor_id": "U-MEERA",
       "org_id": "supra",
-      "reason": "Cascade invalidation triggered by superseding N-M08 with N-M881",
+      "reason": "Cascade invalidation triggered by superseding N-M08 with N-M465",
       "metadata": {
-        "new_node_id": "N-M881"
+        "new_node_id": "N-M465"
       },
-      "id": "A-BG5OVXM",
-      "timestamp": "2026-05-30T07:46:46.721Z"
+      "id": "A-8LFHYJJ",
+      "timestamp": "2026-06-01T10:06:48.721Z"
     },
     {
       "node_id": "N-DRV-01",
@@ -619,8 +619,8 @@
         "depth": 1,
         "trigger_node_id": "N-M08"
       },
-      "id": "A-Y73R96I",
-      "timestamp": "2026-05-30T07:46:46.723Z"
+      "id": "A-6E6GKI7",
+      "timestamp": "2026-06-01T10:06:48.728Z"
     },
     {
       "node_id": "N-DRV-02",
@@ -634,8 +634,8 @@
         "depth": 1,
         "trigger_node_id": "N-M08"
       },
-      "id": "A-7DHZ7E4",
-      "timestamp": "2026-05-30T07:46:46.725Z"
+      "id": "A-ERM5KLK",
+      "timestamp": "2026-06-01T10:06:48.736Z"
     },
     {
       "node_id": "N-DRV-03",
@@ -649,8 +649,8 @@
         "depth": 1,
         "trigger_node_id": "N-M08"
       },
-      "id": "A-OJ01E1C",
-      "timestamp": "2026-05-30T07:46:46.727Z"
+      "id": "A-73ZJVKT",
+      "timestamp": "2026-06-01T10:06:48.743Z"
     },
     {
       "node_id": "N-DRV-04",
@@ -664,8 +664,8 @@
         "depth": 1,
         "trigger_node_id": "N-M08"
       },
-      "id": "A-WGVMVPO",
-      "timestamp": "2026-05-30T07:46:46.729Z"
+      "id": "A-U1UIOFH",
+      "timestamp": "2026-06-01T10:06:48.752Z"
     },
     {
       "node_id": "N-DRV-05",
@@ -679,8 +679,8 @@
         "depth": 1,
         "trigger_node_id": "N-M08"
       },
-      "id": "A-WBJR4LE",
-      "timestamp": "2026-05-30T07:46:46.731Z"
+      "id": "A-UBRJ3NG",
+      "timestamp": "2026-06-01T10:06:48.758Z"
     },
     {
       "node_id": "N-DRV-06",
@@ -694,8 +694,8 @@
         "depth": 1,
         "trigger_node_id": "N-M08"
       },
-      "id": "A-ZYYXOXR",
-      "timestamp": "2026-05-30T07:46:46.734Z"
+      "id": "A-VJPJ9WU",
+      "timestamp": "2026-06-01T10:06:48.766Z"
     },
     {
       "node_id": "N-HELD",
@@ -709,8 +709,8 @@
         "depth": 1,
         "trigger_node_id": "N-M08"
       },
-      "id": "A-452YBMX",
-      "timestamp": "2026-05-30T07:46:46.735Z"
+      "id": "A-FSY43P9",
+      "timestamp": "2026-06-01T10:06:48.770Z"
     },
     {
       "node_id": "N-DRV-02-A",
@@ -724,8 +724,8 @@
         "depth": 2,
         "trigger_node_id": "N-M08"
       },
-      "id": "A-D0VQXCR",
-      "timestamp": "2026-05-30T07:46:46.738Z"
+      "id": "A-ZABBQKZ",
+      "timestamp": "2026-06-01T10:06:48.777Z"
     },
     {
       "node_id": "N-DRV-04-A",
@@ -739,8 +739,8 @@
         "depth": 2,
         "trigger_node_id": "N-M08"
       },
-      "id": "A-55DNUQH",
-      "timestamp": "2026-05-30T07:46:46.739Z"
+      "id": "A-LTP2OSN",
+      "timestamp": "2026-06-01T10:06:48.785Z"
     },
     {
       "node_id": "N-DRV-04-B",
@@ -754,8 +754,8 @@
         "depth": 2,
         "trigger_node_id": "N-M08"
       },
-      "id": "A-3YDL718",
-      "timestamp": "2026-05-30T07:46:46.741Z"
+      "id": "A-P11WGGE",
+      "timestamp": "2026-06-01T10:06:48.792Z"
     },
     {
       "node_id": "N-DRV-01",
@@ -766,8 +766,8 @@
       "org_id": "supra",
       "reason": "Lactate monitoring schedule checked. Will update to v3 timing on next shift, but current schedule remains clinically safe.",
       "metadata": {},
-      "id": "A-CIE10CC",
-      "timestamp": "2026-05-30T07:46:46.764Z"
+      "id": "A-SAM27DG",
+      "timestamp": "2026-06-01T10:06:48.866Z"
     }
   ],
   "pulse_alerts": [
@@ -779,9 +779,9 @@
       "title": "Sepsis Protocol v2 (2024) superseded. 9 decisions need review.",
       "body": "⛔ Sepsis Protocol v2 (2024) was updated by U-MEERA. This change has cascaded down the knowledge graph, placing 9 related items in medicine department into REVIEW_REQUIRED status.",
       "link": "/nodes/N-M08",
-      "id": "PL-0KAVIUD",
+      "id": "PL-J2OLOHE",
       "is_read": false,
-      "created_at": "2026-05-30T07:46:46.743Z"
+      "created_at": "2026-06-01T10:06:48.801Z"
     },
     {
       "org_id": "supra",
@@ -791,9 +791,9 @@
       "title": "Sepsis Protocol v2 (2024) superseded. 9 decisions need review.",
       "body": "⛔ Sepsis Protocol v2 (2024) was updated by U-MEERA. This change has cascaded down the knowledge graph, placing 9 related items in medicine department into REVIEW_REQUIRED status.",
       "link": "/nodes/N-M08",
-      "id": "PL-2QKHW24",
+      "id": "PL-3BISJ9H",
       "is_read": false,
-      "created_at": "2026-05-30T07:46:46.744Z"
+      "created_at": "2026-06-01T10:06:48.805Z"
     },
     {
       "org_id": "supra",
@@ -803,29 +803,31 @@
       "title": "N-DRV-01 confirmed valid by Dr. Ananya (Junior)",
       "body": "ℹ️ Junior reviewer checked Lactate Monitoring Schedule and marked it ACTIVE. Reason: Lactate monitoring schedule checked. Will update to v3 timing on next shift, but current schedule remains clinically safe.",
       "link": "/nodes/N-DRV-01",
-      "id": "PL-71I31OD",
-      "is_read": true,
-      "created_at": "2026-05-30T07:46:46.766Z"
+      "id": "PL-B0VH19Z",
+      "is_read": false,
+      "created_at": "2026-06-01T10:06:48.875Z"
     }
   ],
   "health_scores": {
     "medicine": {
-      "overall": 0.31930158344001225,
-      "coverage": 0.4,
-      "freshness": 0.38461538461538464,
-      "balance": 0.038815609507753424,
-      "consistency": 0.38461538461538464,
-      "timestamp": "2026-05-30T10:16:12.641Z",
-      "pending": false
+      "overall": 0.548440334100832,
+      "coverage": 0.75,
+      "freshness": 0.5294117647058824,
+      "balance": 0.3488193175629837,
+      "consistency": 0.5294117647058824,
+      "timestamp": "2026-06-01T10:06:48.870Z",
+      "pending": false,
+      "department": "medicine"
     },
     "ortho": {
-      "overall": 0.7585786437626905,
-      "coverage": 0.6,
+      "overall": 0.8175,
+      "coverage": 0.75,
       "freshness": 1,
-      "balance": 0.2928932188134524,
+      "balance": 0.4,
       "consistency": 1,
-      "timestamp": "2026-05-30T07:46:46.705Z",
-      "pending": false
+      "timestamp": "2026-06-01T10:06:48.670Z",
+      "pending": false,
+      "department": "ortho"
     }
   }
 }

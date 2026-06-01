@@ -38,7 +38,7 @@ const INITIAL_STATE = {
   ],
   knowledge_nodes: [
     {
-      id: 'N-M02', org_id: 'supra', hierarchy_level_id: 'HL-05-MED', type: 'DECISION',
+      id: 'N-M02', org_id: 'supra', hierarchy_level_id: 'HL-05-MED', type: 'CONSTRAINT',
       title: 'Sepsis Protocol v1 (2022)',
       content: 'Supra Sepsis Bundle v1 (2022): lactate within 6 hours, antibiotics within 4 hours.',
       importance: 0.90, status: 'SUPERSEDED', superseded_by: 'N-M08', department: 'medicine',
@@ -87,7 +87,7 @@ const INITIAL_STATE = {
       valid_until: null, created_by: 'U-MEERA', created_at: '2024-10-01T09:00:00+05:30'
     },
     {
-      id: 'N-DRV-06', org_id: 'supra', hierarchy_level_id: 'HL-10-MED', type: 'DECISION',
+      id: 'N-DRV-06', org_id: 'supra', hierarchy_level_id: 'HL-10-MED', type: 'CONSTRAINT',
       title: 'Pharmacy Pre-Auth for IV Antibiotics',
       content: 'Per Sepsis v2 timing: pharmacy pre-authorizes Pip-Tazo for suspected sepsis. No approval delay within 3-hour window.',
       importance: 0.72, status: 'ACTIVE', superseded_by: null, department: 'medicine',
@@ -136,9 +136,9 @@ const INITIAL_STATE = {
       valid_until: null, created_by: 'U-ANANYA', created_at: '2025-07-15T14:00:00+05:30'
     },
     {
-      id: 'N-M04', org_id: 'supra', hierarchy_level_id: 'HL-08-MED', type: 'FACT',
-      title: 'HbA1c Monitoring Standard',
-      content: 'Fasting glucose levels are not sufficient. Order HbA1c tests every 3 months for diabetic patients.',
+      id: 'N-M04', org_id: 'supra', hierarchy_level_id: 'HL-08-MED', type: 'ANTI_PATTERN',
+      title: 'Fasting Glucose Only for Diabetic Monitoring',
+      content: 'Do NOT rely on fasting glucose alone for diabetic monitoring. Always order HbA1c every 3 months.',
       importance: 0.80, status: 'ACTIVE', superseded_by: null, department: 'medicine',
       valid_until: null, created_by: 'U-MEERA', created_at: '2025-05-10T11:00:00+05:30'
     },
@@ -229,29 +229,42 @@ function writeDB(state) {
   fs.writeFileSync(DB_FILE_PATH, JSON.stringify(state, null, 2), 'utf-8');
 }
 
-// Calculate health score synchronously from the state
+// Calculate health score synchronously from the state.
+// As per assessment spec, all 4 dimensions are computed ORG-WIDE using all nodes
+// in the organization (org_id = 'supra'), not filtered to a single department.
+// The department param is kept for the API signature / health_scores cache key only.
 function calculateHealthScoreSync(state, department, pending = false) {
-  const nodes = state.knowledge_nodes.filter(n => n.department === department);
-  const levels = state.hierarchy_levels.filter(l => l.department === null || l.department === department);
+  // --- ORG-WIDE node and level pools (assessment formula scope) ---
+  const orgId = 'supra';
+  const allOrgNodes = state.knowledge_nodes.filter(n => n.org_id === orgId);
+  const allOrgLevels = state.hierarchy_levels.filter(l => l.org_id === orgId);
 
-  if (nodes.length === 0) {
-    return { overall: 1.0, coverage: 1.0, freshness: 1.0, balance: 1.0, consistency: 1.0, timestamp: new Date().toISOString(), pending };
+  if (allOrgNodes.length === 0) {
+    return { overall: 1.0, coverage: 1.0, freshness: 1.0, balance: 1.0, consistency: 1.0, timestamp: new Date().toISOString(), pending, department };
   }
 
-  // 1. Coverage: % of hierarchy levels with >= 1 ACTIVE node
-  const activeNodes = nodes.filter(n => n.status === 'ACTIVE');
-  const activeLevelIds = new Set(activeNodes.map(n => n.hierarchy_level_id).filter(id => id !== null));
-  const totalLevelsCount = levels.length;
-  const coverage = totalLevelsCount > 0 ? activeLevelIds.size / totalLevelsCount : 1.0;
+  // 1. Coverage: % of ALL org hierarchy levels that have >= 1 populated node
+  //    "Populated" = ACTIVE or REVIEW_REQUIRED (still valid knowledge at that level)
+  //    Assessment expects coverage UNCHANGED after cascade: "No nodes removed, levels still populated"
+  //    Only SUPERSEDED/EXPIRED truly depopulate a level
+  const populatedNodes = allOrgNodes.filter(n => n.status === 'ACTIVE' || n.status === 'REVIEW_REQUIRED');
+  const populatedLevelIds = new Set(populatedNodes.map(n => n.hierarchy_level_id).filter(id => id !== null));
+  const totalLevelsCount = allOrgLevels.length;                         // 8
+  const coverage = totalLevelsCount > 0 ? populatedLevelIds.size / totalLevelsCount : 1.0;
 
-  // 2. Freshness: ACTIVE nodes / (ACTIVE + REVIEW_REQUIRED)
-  const activeOrReviewRequired = nodes.filter(n => n.status === 'ACTIVE' || n.status === 'REVIEW_REQUIRED');
-  const freshNodes = nodes.filter(n => n.status === 'ACTIVE' && (n.valid_until === null || new Date(n.valid_until).getTime() > Date.now()));
-  const freshness = activeOrReviewRequired.length > 0 ? freshNodes.length / activeOrReviewRequired.length : 1.0;
+  // 2. Freshness: ACTIVE (and not expiring) / (ACTIVE + REVIEW_REQUIRED) org-wide
+  //    EXPIRED nodes are excluded from the denominator
+  const activeOrRR = allOrgNodes.filter(n => n.status === 'ACTIVE' || n.status === 'REVIEW_REQUIRED');
+  const freshNodes = allOrgNodes.filter(n =>
+    n.status === 'ACTIVE' &&
+    (n.valid_until === null || new Date(n.valid_until).getTime() > Date.now())
+  );
+  const freshness = activeOrRR.length > 0 ? freshNodes.length / activeOrRR.length : 1.0;
 
-  // 3. Balance: type distribution health
+  // 3. Balance: type distribution health (penalises homogeneity) org-wide
+  //    balance = 1 - stddev(type_counts) / avg(type_counts)
   const types = ['CONSTRAINT', 'DECISION', 'ANTI_PATTERN', 'FACT'];
-  const counts = types.map(t => nodes.filter(n => n.type === t).length);
+  const counts = types.map(t => allOrgNodes.filter(n => n.type === t).length);
   const avgCount = counts.reduce((sum, c) => sum + c, 0) / counts.length;
 
   let balance = 1.0;
@@ -261,16 +274,18 @@ function calculateHealthScoreSync(state, department, pending = false) {
     balance = Math.max(0, 1.0 - (stdDev / avgCount));
   }
 
-  // 4. Consistency: ACTIVE / (ACTIVE + REVIEW_REQUIRED)
-  const activeCount = nodes.filter(n => n.status === 'ACTIVE').length;
-  const rrCount = nodes.filter(n => n.status === 'REVIEW_REQUIRED').length;
+  // 4. Consistency: ACTIVE / (ACTIVE + REVIEW_REQUIRED) org-wide
+  //    REVIEW_REQUIRED nodes = inconsistency signal
+  const activeCount = allOrgNodes.filter(n => n.status === 'ACTIVE').length;
+  const rrCount = allOrgNodes.filter(n => n.status === 'REVIEW_REQUIRED').length;
   const consistency = (activeCount + rrCount) > 0 ? activeCount / (activeCount + rrCount) : 1.0;
 
-  // Weights: coverage 0.25, freshness 0.30, balance 0.20, consistency 0.25
+  // Weighted Overall (from org config)
   const weights = { coverage: 0.25, freshness: 0.30, balance: 0.20, consistency: 0.25 };
-  const overall = (coverage * weights.coverage) + (freshness * weights.freshness) + (balance * weights.balance) + (consistency * weights.consistency);
+  const overall = (coverage * weights.coverage) + (freshness * weights.freshness) +
+                  (balance * weights.balance) + (consistency * weights.consistency);
 
-  return { overall, coverage, freshness, balance, consistency, timestamp: new Date().toISOString(), pending };
+  return { overall, coverage, freshness, balance, consistency, timestamp: new Date().toISOString(), pending, department };
 }
 
 const db = {

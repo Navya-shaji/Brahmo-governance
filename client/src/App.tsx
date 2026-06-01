@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import HealthDashboard from './components/HealthDashboard';
-import PulseAlerts from './components/PulseAlerts';
-import CascadeTree from './components/CascadeTree';
-import NodeDetailPanel from './components/NodeDetailPanel';
-import type { KnowledgeNode, Edge, User, AuditLog, PulseAlert } from './types';
+import React, { useState, useEffect } from "react";
+import HealthDashboard from "./components/HealthDashboard";
+import PulseAlerts from "./components/PulseAlerts";
+import CascadeTree from "./components/CascadeTree";
+import NodeDetailPanel from "./components/NodeDetailPanel";
+import type { KnowledgeNode, Edge, User, AuditLog, PulseAlert } from "./types";
 
 export default function App() {
   // Application state
@@ -14,7 +14,9 @@ export default function App() {
   const [alerts, setAlerts] = useState<PulseAlert[]>([]);
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
-  const [activeDept, setActiveDept] = useState<'medicine' | 'ortho'>('medicine');
+  const [activeDept, setActiveDept] = useState<"medicine" | "ortho">(
+    "medicine",
+  );
   const [healthScore, setHealthScore] = useState<any>({
     overall: 0.86,
     coverage: 0.82,
@@ -22,7 +24,7 @@ export default function App() {
     balance: 0.78,
     consistency: 0.92,
     pending: false,
-    timestamp: ''
+    timestamp: "",
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -30,34 +32,38 @@ export default function App() {
 
   // System logging helper
   const logSys = (msg: string) => {
-    setSysLogs(prev => [`[${new Date().toLocaleTimeString()}] ${msg}`, ...prev].slice(0, 15));
+    setSysLogs((prev) =>
+      [`[${new Date().toLocaleTimeString()}] ${msg}`, ...prev].slice(0, 15),
+    );
   };
 
   // Fetch initial data
-  const fetchData = async (department: 'medicine' | 'ortho') => {
+  const fetchData = async (department: "medicine" | "ortho") => {
     try {
       setIsLoading(true);
       // Fetch users
-      const usersRes = await fetch('/api/users');
+      const usersRes = await fetch("/api/users");
       const usersData = await usersRes.json();
       if (usersData.success) {
         setUsers(usersData.users);
         if (!currentUser && usersData.users.length > 0) {
           // Default to Dr. Meera (HOD Medicine)
-          const meera = usersData.users.find((u: User) => u.id === 'U-MEERA') || usersData.users[0];
+          const meera =
+            usersData.users.find((u: User) => u.id === "U-MEERA") ||
+            usersData.users[0];
           setCurrentUser(meera);
         }
       }
 
       // Fetch all nodes
-      const nodesRes = await fetch('/api/nodes');
+      const nodesRes = await fetch("/api/nodes");
       const nodesData = await nodesRes.json();
       if (nodesData.success) {
         setNodes(nodesData.nodes);
       }
 
       // Fetch edges
-      const edgesRes = await fetch('/api/edges');
+      const edgesRes = await fetch("/api/edges");
       const edgesData = await edgesRes.json();
       if (edgesData.success) {
         setEdges(edgesData.edges);
@@ -71,12 +77,11 @@ export default function App() {
       }
 
       // Fetch audit logs
-      const auditRes = await fetch('/api/audit');
+      const auditRes = await fetch("/api/audit");
       const auditData = await auditRes.json();
       if (auditData.success) {
         setAuditLogs(auditData.auditLogs);
       }
-
     } catch (err: any) {
       logSys(`Error loading data: ${err.message}`);
     } finally {
@@ -88,11 +93,13 @@ export default function App() {
   useEffect(() => {
     if (currentUser) {
       fetch(`/api/alerts?userId=${currentUser.id}`)
-        .then(res => res.json())
-        .then(data => {
+        .then((res) => res.json())
+        .then((data) => {
           if (data.success) setAlerts(data.alerts);
         });
-      logSys(`Simulating role change to ${currentUser.name} (${currentUser.role})`);
+      logSys(
+        `Simulating role change to ${currentUser.name} (${currentUser.role})`,
+      );
     }
   }, [currentUser]);
 
@@ -105,16 +112,20 @@ export default function App() {
   const handleRecompute = async () => {
     try {
       setIsLoading(true);
-      logSys(`Forcing health score recalculation for ${activeDept} department...`);
-      const res = await fetch('/api/health', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ department: activeDept })
+      logSys(
+        `Forcing health score recalculation for ${activeDept} department...`,
+      );
+      const res = await fetch("/api/health", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ department: activeDept }),
       });
       const data = await res.json();
       if (data.success) {
         setHealthScore(data.score);
-        logSys(`Recalculation complete. Overall score: ${Math.round(data.score.overall * 100)}%`);
+        logSys(
+          `Recalculation complete. Overall score: ${Math.round(data.score.overall * 100)}%`,
+        );
         // Refresh alert list as recompute might have triggered warnings
         if (currentUser) {
           const alertsRes = await fetch(`/api/alerts?userId=${currentUser.id}`);
@@ -133,15 +144,15 @@ export default function App() {
   const handleReset = async () => {
     try {
       setIsLoading(true);
-      logSys('Resetting database to seed state...');
-      const res = await fetch('/api/reset', { method: 'POST' });
+      logSys("Resetting database to seed state...");
+      const res = await fetch("/api/reset", { method: "POST" });
       const data = await res.json();
       if (data.success) {
-        logSys('Database reset complete. Graph state refreshed.');
+        logSys("Database reset complete. Graph state refreshed.");
         setSelectedNodeId(null);
-        setActiveDept('medicine');
+        setActiveDept("medicine");
         // Reload all data
-        await fetchData('medicine');
+        await fetchData("medicine");
       }
     } catch (err: any) {
       logSys(`Reset failed: ${err.message}`);
@@ -153,14 +164,16 @@ export default function App() {
   // Handle Alert Read
   const handleMarkAlertRead = async (alertId: string) => {
     try {
-      const res = await fetch('/api/alerts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ alertId })
+      const res = await fetch("/api/alerts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ alertId }),
       });
       const data = await res.json();
       if (data.success) {
-        setAlerts(prev => prev.map(a => a.id === alertId ? { ...a, is_read: true } : a));
+        setAlerts((prev) =>
+          prev.map((a) => (a.id === alertId ? { ...a, is_read: true } : a)),
+        );
       }
     } catch (err: any) {
       logSys(`Failed to mark alert read: ${err.message}`);
@@ -171,15 +184,15 @@ export default function App() {
   const handleMarkAllAlertsRead = async () => {
     if (!currentUser) return;
     try {
-      const res = await fetch('/api/alerts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: currentUser.id, markAll: true })
+      const res = await fetch("/api/alerts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: currentUser.id, markAll: true }),
       });
       const data = await res.json();
       if (data.success) {
-        setAlerts(prev => prev.map(a => ({ ...a, is_read: true })));
-        logSys('All alerts marked read.');
+        setAlerts((prev) => prev.map((a) => ({ ...a, is_read: true })));
+        logSys("All alerts marked read.");
       }
     } catch (err: any) {
       logSys(`Failed to mark all read: ${err.message}`);
@@ -192,24 +205,24 @@ export default function App() {
     try {
       setIsLoading(true);
       logSys(`Executing action "${action}" on node ${selectedNodeId}...`);
-      
-      const res = await fetch('/api/nodes', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+
+      const res = await fetch("/api/nodes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           action,
           nodeId: selectedNodeId,
           actorId: currentUser.id,
-          ...metadata
-        })
+          ...metadata,
+        }),
       });
-      
+
       const data = await res.json();
       if (data.success) {
         logSys(`Action completed successfully. status updated.`);
         // Reload all data to propagate states
         await fetchData(activeDept);
-        
+
         if (data.newNodeId) {
           setSelectedNodeId(data.newNodeId);
           logSys(`Created new replacement node: ${data.newNodeId}`);
@@ -230,31 +243,43 @@ export default function App() {
     if (!currentUser) return;
     try {
       setIsLoading(true);
-      logSys('Initiating Sepsis Protocol v2 -> v3 Supersession cascade...');
-      
-      const res = await fetch('/api/cascade', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      logSys("Initiating Sepsis Protocol v2 -> v3 Supersession cascade...");
+
+      const res = await fetch("/api/cascade", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          supersededNodeId: 'N-M08',
-          newTitle: 'Sepsis Protocol v3 (2026)',
-          newContent: 'Supra Sepsis Bundle v3 (2026): blood cultures before antibiotics, lactate measurement within 1 HOUR, 30mL/kg crystalloid for hypotension.',
-          newType: 'DECISION',
+          supersededNodeId: "N-M08",
+          newTitle: "Sepsis Protocol v3 (2026)",
+          newContent:
+            "Supra Sepsis Bundle v3 (2026): blood cultures before antibiotics, lactate measurement within 1 HOUR, 30mL/kg crystalloid for hypotension.",
+          newType: "DECISION",
           newImportance: 0.95,
-          actorId: currentUser.id
-        })
+          actorId: currentUser.id,
+        }),
       });
 
       const data = await res.json();
       if (data.success) {
-        const updated = data.affectedNodes.filter((r: any) => r.action === 'TRANSITION' || r.newStatus === 'REVIEW_REQUIRED').length || data.affectedNodes.filter((r: any) => r.action === 'UPDATED').length;
-        const skippedHold = data.affectedNodes.filter((r: any) => r.action === 'SKIPPED_HOLD').length;
-        const skippedOld = data.affectedNodes.filter((r: any) => r.action === 'SKIPPED_SUPERSEDED').length;
-        
-        logSys(`Sepsis Cascade complete: ${updated} nodes set to REVIEW_REQUIRED, ${skippedHold} LEGAL_HOLD nodes skipped, ${skippedOld} SUPERSEDED nodes skipped.`);
-        
+        const updated =
+          data.affectedNodes.filter(
+            (r: any) =>
+              r.action === "TRANSITION" || r.newStatus === "REVIEW_REQUIRED",
+          ).length ||
+          data.affectedNodes.filter((r: any) => r.action === "UPDATED").length;
+        const skippedHold = data.affectedNodes.filter(
+          (r: any) => r.action === "SKIPPED_HOLD",
+        ).length;
+        const skippedOld = data.affectedNodes.filter(
+          (r: any) => r.action === "SKIPPED_SUPERSEDED",
+        ).length;
+
+        logSys(
+          `Sepsis Cascade complete: ${updated} nodes set to REVIEW_REQUIRED, ${skippedHold} LEGAL_HOLD nodes skipped, ${skippedOld} SUPERSEDED nodes skipped.`,
+        );
+
         // Refresh everything
-        await fetchData('medicine');
+        await fetchData("medicine");
         setSelectedNodeId(data.newNode.id);
       } else {
         logSys(`Cascade failed: ${data.error}`);
@@ -272,29 +297,39 @@ export default function App() {
     if (!currentUser) return;
     try {
       setIsLoading(true);
-      logSys('Initiating Surprise Test: Superseding DVT Prophylaxis Protocol (N-O01) in Ortho...');
-      
-      const res = await fetch('/api/cascade', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      logSys(
+        "Initiating Surprise Test: Superseding DVT Prophylaxis Protocol (N-O01) in Ortho...",
+      );
+
+      const res = await fetch("/api/cascade", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          supersededNodeId: 'N-O01',
-          newTitle: 'DVT Prophylaxis Protocol v2',
-          newContent: 'ALL ortho surgical patients: Enoxaparin 40mg SC daily (v2). TKR 10d (tightened from 14d), THR 28d.',
-          newType: 'CONSTRAINT',
+          supersededNodeId: "N-O01",
+          newTitle: "DVT Prophylaxis Protocol v2",
+          newContent:
+            "ALL ortho surgical patients: Enoxaparin 40mg SC daily (v2). TKR 10d (tightened from 14d), THR 28d.",
+          newType: "CONSTRAINT",
           newImportance: 0.93,
-          actorId: currentUser.id
-        })
+          actorId: currentUser.id,
+        }),
       });
 
       const data = await res.json();
       if (data.success) {
-        const updated = data.affectedNodes.filter((r: any) => r.action === 'TRANSITION' || r.newStatus === 'REVIEW_REQUIRED').length || data.affectedNodes.filter((r: any) => r.action === 'UPDATED').length;
-        logSys(`Ortho Cascade complete: ${updated} derived nodes flagged in Orthopaedics.`);
-        
+        const updated =
+          data.affectedNodes.filter(
+            (r: any) =>
+              r.action === "TRANSITION" || r.newStatus === "REVIEW_REQUIRED",
+          ).length ||
+          data.affectedNodes.filter((r: any) => r.action === "UPDATED").length;
+        logSys(
+          `Ortho Cascade complete: ${updated} derived nodes flagged in Orthopaedics.`,
+        );
+
         // Refresh ortho data
-        setActiveDept('ortho');
-        await fetchData('ortho');
+        setActiveDept("ortho");
+        await fetchData("ortho");
         setSelectedNodeId(data.newNode.id);
       } else {
         logSys(`Ortho Cascade failed: ${data.error}`);
@@ -307,13 +342,15 @@ export default function App() {
     }
   };
 
-  const selectedNode = nodes.find(n => n.id === selectedNodeId) || null;
-  const filteredAuditLogs = auditLogs.filter(log => log.node_id === selectedNodeId);
+  const selectedNode = nodes.find((n) => n.id === selectedNodeId) || null;
+  const filteredAuditLogs = auditLogs.filter(
+    (log) => log.node_id === selectedNodeId,
+  );
 
   // Department node root mappings
   const deptRootMap: Record<string, string> = {
-    medicine: 'N-M08',
-    ortho: 'N-O01'
+    medicine: "N-M08",
+    ortho: "N-O01",
   };
 
   return (
@@ -326,9 +363,14 @@ export default function App() {
           </div>
           <div className="text-left">
             <h1 className="text-lg font-extrabold tracking-tight text-white flex items-center gap-1.5">
-              BRAHMO <span className="text-slate-500 font-normal">|</span> <span className="text-indigo-400 font-bold bg-indigo-500/5 px-2 py-0.5 rounded text-xs border border-indigo-500/10">Governance Engine</span>
+              BRAHMO <span className="text-slate-500 font-normal">|</span>{" "}
+              <span className="text-indigo-400 font-bold bg-indigo-500/5 px-2 py-0.5 rounded text-xs border border-indigo-500/10">
+                Governance Engine
+              </span>
             </h1>
-            <p className="text-[10px] text-slate-500 mt-0.5 font-medium tracking-wide uppercase">Cascade Invalidation • Vitals Health Score • Pulse Alerts</p>
+            <p className="text-[10px] text-slate-500 mt-0.5 font-medium tracking-wide uppercase">
+              Cascade Invalidation • Vitals Health Score • Pulse Alerts
+            </p>
           </div>
         </div>
 
@@ -336,16 +378,18 @@ export default function App() {
         <div className="flex items-center flex-wrap gap-3">
           {/* User Role Simulation Select */}
           <div className="flex items-center gap-2">
-            <span className="text-slate-500 text-xs font-semibold">Simulate User:</span>
+            <span className="text-slate-500 text-xs font-semibold">
+              Simulate User:
+            </span>
             <select
-              value={currentUser?.id || ''}
-              onChange={e => {
-                const u = users.find(x => x.id === e.target.value);
+              value={currentUser?.id || ""}
+              onChange={(e) => {
+                const u = users.find((x) => x.id === e.target.value);
                 if (u) setCurrentUser(u);
               }}
               className="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-200 focus:outline-none focus:border-indigo-500 cursor-pointer hover:bg-slate-850 transition-all"
             >
-              {users.map(u => (
+              {users.map((u) => (
                 <option key={u.id} value={u.id}>
                   {u.name} ({u.role})
                 </option>
@@ -358,8 +402,18 @@ export default function App() {
             onClick={handleReset}
             className="bg-slate-900 hover:bg-slate-850 active:scale-95 text-slate-400 hover:text-white border border-slate-800 hover:border-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1 cursor-pointer"
           >
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+              />
             </svg>
             Reset
           </button>
@@ -384,47 +438,61 @@ export default function App() {
 
           {/* Simulation / Testing Panel */}
           <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800 rounded-2xl p-5 shadow-2xl hidden lg:block">
-            <h3 className="text-xs uppercase font-extrabold text-slate-500 tracking-wider mb-3 text-left">Governance Scenarios</h3>
+            <h3 className="text-xs uppercase font-extrabold text-slate-500 tracking-wider mb-3 text-left">
+              Governance Scenarios
+            </h3>
             <div className="space-y-3.5">
               <div className="p-3 bg-slate-950/30 border border-slate-800/80 rounded-xl text-left">
-                <h4 className="text-xs font-bold text-slate-200">Scenario 1: Sepsis Protocol Update</h4>
+                <h4 className="text-xs font-bold text-slate-200">
+                  Scenario 1: Sepsis Protocol Update
+                </h4>
                 <p className="text-[11px] text-slate-400 mt-1 leading-normal">
-                  Simulate Dr. Meera superseding Sepsis v2 → v3. This triggers a cascade setting derived nodes to REVIEW_REQUIRED, skips compliance node (LEGAL_HOLD), and alerts doctors.
+                  Simulate Dr. Meera superseding Sepsis v2 → v3. This triggers a
+                  cascade setting derived nodes to REVIEW_REQUIRED, skips
+                  compliance node (LEGAL_HOLD), and alerts doctors.
                 </p>
                 <button
                   onClick={triggerSepsisCascade}
-                  disabled={isLoading || currentUser?.id !== 'U-MEERA'}
+                  disabled={isLoading || currentUser?.id !== "U-MEERA"}
                   className={`mt-2.5 w-full py-1.5 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-                    currentUser?.id === 'U-MEERA'
-                      ? 'bg-indigo-500 hover:bg-indigo-600 text-white shadow-[0_0_8px_rgba(99,102,241,0.2)] active:scale-95'
-                      : 'bg-slate-900 text-slate-650 cursor-not-allowed border border-slate-800'
+                    currentUser?.id === "U-MEERA"
+                      ? "bg-indigo-500 hover:bg-indigo-600 text-white shadow-[0_0_8px_rgba(99,102,241,0.2)] active:scale-95"
+                      : "bg-slate-900 text-slate-650 cursor-not-allowed border border-slate-800"
                   }`}
                 >
                   ⚡ Run Scenario 1 (Sepsis Cascade)
                 </button>
-                {currentUser?.id !== 'U-MEERA' && (
-                  <span className="text-[9px] text-amber-500 mt-1 block">Simulate Dr. Meera (HOD Medicine) to trigger this scenario.</span>
+                {currentUser?.id !== "U-MEERA" && (
+                  <span className="text-[9px] text-amber-500 mt-1 block">
+                    Simulate Dr. Meera (HOD Medicine) to trigger this scenario.
+                  </span>
                 )}
               </div>
 
               <div className="p-3 bg-slate-950/30 border border-slate-800/80 rounded-xl text-left">
-                <h4 className="text-xs font-bold text-slate-200">Scenario 5: Surprise Ortho Cascade</h4>
+                <h4 className="text-xs font-bold text-slate-200">
+                  Scenario 5: Surprise Ortho Cascade
+                </h4>
                 <p className="text-[11px] text-slate-400 mt-1 leading-normal">
-                  Simulate Dr. Vikram updating the Ortho DVT Prophylaxis protocol. Test graph boundaries, visited set, and alerts routing to Ortho doctors (not Medicine).
+                  Simulate Dr. Vikram updating the Ortho DVT Prophylaxis
+                  protocol. Test graph boundaries, visited set, and alerts
+                  routing to Ortho doctors (not Medicine).
                 </p>
                 <button
                   onClick={triggerOrthoCascade}
-                  disabled={isLoading || currentUser?.id !== 'U-VIKRAM'}
+                  disabled={isLoading || currentUser?.id !== "U-VIKRAM"}
                   className={`mt-2.5 w-full py-1.5 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-                    currentUser?.id === 'U-VIKRAM'
-                      ? 'bg-cyan-600 hover:bg-cyan-500 text-white shadow-[0_0_8px_rgba(6,182,212,0.2)] active:scale-95'
-                      : 'bg-slate-900 text-slate-655 cursor-not-allowed border border-slate-800'
+                    currentUser?.id === "U-VIKRAM"
+                      ? "bg-cyan-600 hover:bg-cyan-500 text-white shadow-[0_0_8px_rgba(6,182,212,0.2)] active:scale-95"
+                      : "bg-slate-900 text-slate-655 cursor-not-allowed border border-slate-800"
                   }`}
                 >
                   ⚡ Run Scenario 5 (Surprise Test)
                 </button>
-                {currentUser?.id !== 'U-VIKRAM' && (
-                  <span className="text-[9px] text-cyan-500 mt-1 block">Simulate Dr. Vikram (HOD Ortho) to trigger this scenario.</span>
+                {currentUser?.id !== "U-VIKRAM" && (
+                  <span className="text-[9px] text-cyan-500 mt-1 block">
+                    Simulate Dr. Vikram (HOD Ortho) to trigger this scenario.
+                  </span>
                 )}
               </div>
             </div>
@@ -432,31 +500,33 @@ export default function App() {
         </div>
 
         {/* Middle Column: Cascade Tree Visualization */}
-        <div className={`${selectedNode ? 'xl:col-span-6' : 'xl:col-span-9'} flex flex-col gap-6 transition-all duration-300`}>
+        <div
+          className={`${selectedNode ? "xl:col-span-6" : "xl:col-span-9"} flex flex-col gap-6 transition-all duration-300`}
+        >
           {/* Department Tabs */}
           <div className="flex border border-slate-800 bg-slate-950/40 p-1.5 rounded-xl max-w-md mx-auto w-full">
             <button
               onClick={() => {
-                setActiveDept('medicine');
+                setActiveDept("medicine");
                 setSelectedNodeId(null);
               }}
               className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                activeDept === 'medicine'
-                  ? 'bg-slate-800 text-white shadow-[0_0_8px_rgba(0,0,0,0.4)] border border-slate-750'
-                  : 'text-slate-400 hover:text-slate-250'
+                activeDept === "medicine"
+                  ? "bg-slate-800 text-white shadow-[0_0_8px_rgba(0,0,0,0.4)] border border-slate-750"
+                  : "text-slate-400 hover:text-slate-250"
               }`}
             >
               Medicine Department
             </button>
             <button
               onClick={() => {
-                setActiveDept('ortho');
+                setActiveDept("ortho");
                 setSelectedNodeId(null);
               }}
               className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                activeDept === 'ortho'
-                  ? 'bg-slate-800 text-white shadow-[0_0_8px_rgba(0,0,0,0.4)] border border-slate-750'
-                  : 'text-slate-400 hover:text-slate-250'
+                activeDept === "ortho"
+                  ? "bg-slate-800 text-white shadow-[0_0_8px_rgba(0,0,0,0.4)] border border-slate-750"
+                  : "text-slate-400 hover:text-slate-250"
               }`}
             >
               Orthopaedics Department
@@ -475,14 +545,20 @@ export default function App() {
           <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800 rounded-2xl p-5 shadow-2xl">
             <h3 className="text-[10px] uppercase font-extrabold text-slate-500 tracking-wider mb-2 flex items-center justify-between">
               <span>System Event Console</span>
-              <span className="text-[9px] text-slate-600 font-normal">Diagnostic logs</span>
+              <span className="text-[9px] text-slate-600 font-normal">
+                Diagnostic logs
+              </span>
             </h3>
             <div className="bg-slate-950/80 rounded-xl p-3 border border-slate-800 h-[100px] overflow-y-auto font-mono text-[10px] text-slate-400 space-y-1.5 text-left scrollbar-thin scrollbar-thumb-slate-900">
               {sysLogs.length === 0 ? (
-                <div className="text-slate-600 text-center py-6">Ready. Operations will log here.</div>
+                <div className="text-slate-600 text-center py-6">
+                  Ready. Operations will log here.
+                </div>
               ) : (
                 sysLogs.map((log, idx) => (
-                  <div key={idx} className="truncate select-all" title={log}>{log}</div>
+                  <div key={idx} className="truncate select-all" title={log}>
+                    {log}
+                  </div>
                 ))
               )}
             </div>
@@ -505,7 +581,8 @@ export default function App() {
 
       {/* Footer bar */}
       <footer className="border-t border-slate-900 py-4 px-6 text-center text-[10px] text-slate-600">
-        BRAHMO Governance Framework • Active Org: Supra Multi-Specialty Hospital • Max Cascade Depth: 3
+        BRAHMO Governance Framework • Active Org: Supra Multi-Specialty Hospital
+        • Max Cascade Depth: 3
       </footer>
     </main>
   );
