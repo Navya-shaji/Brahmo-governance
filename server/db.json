@@ -134,7 +134,7 @@
       "content": "Supra Sepsis Bundle v2 (2024): blood cultures before antibiotics, lactate within 3 HOURS, 30mL/kg crystalloid for hypotension.",
       "importance": 0.95,
       "status": "SUPERSEDED",
-      "superseded_by": "N-M465",
+      "superseded_by": "N-M818",
       "department": "medicine",
       "valid_until": null,
       "created_by": "U-MEERA",
@@ -411,7 +411,7 @@
       "created_at": "2024-07-01T09:00:00+05:30"
     },
     {
-      "id": "N-M465",
+      "id": "N-M818",
       "org_id": "supra",
       "hierarchy_level_id": "HL-05-MED",
       "type": "DECISION",
@@ -423,7 +423,7 @@
       "department": "medicine",
       "valid_until": null,
       "created_by": "U-MEERA",
-      "created_at": "2026-06-01T10:06:48.694Z"
+      "created_at": "2026-06-01T12:25:18.931Z"
     }
   ],
   "edges": [
@@ -533,11 +533,11 @@
       "created_at": "2024-03-01T10:00:00+05:30"
     },
     {
-      "id": "E-CTZKY3A",
-      "source_id": "N-M465",
+      "id": "E-PJCKRH5",
+      "source_id": "N-M818",
       "target_id": "N-M08",
       "edge_type": "SUPERSEDES",
-      "created_at": "2026-06-01T10:06:48.702Z"
+      "created_at": "2026-06-01T12:25:18.933Z"
     }
   ],
   "audit_log": [
@@ -572,15 +572,15 @@
       "new_value": "SUPERSEDED",
       "actor_id": "U-MEERA",
       "org_id": "supra",
-      "reason": "Superseded by new node N-M465",
+      "reason": "Superseded by new node N-M818",
       "metadata": {
-        "new_node_id": "N-M465"
+        "new_node_id": "N-M818"
       },
-      "id": "A-WD9YADU",
-      "timestamp": "2026-06-01T10:06:48.709Z"
+      "id": "A-FR5CTPG",
+      "timestamp": "2026-06-01T12:25:18.935Z"
     },
     {
-      "node_id": "N-M465",
+      "node_id": "N-M818",
       "action": "CREATE",
       "old_value": null,
       "new_value": "ACTIVE",
@@ -590,8 +590,8 @@
       "metadata": {
         "supersedes_node_id": "N-M08"
       },
-      "id": "A-M2CTK4M",
-      "timestamp": "2026-06-01T10:06:48.712Z"
+      "id": "A-SIR1UDE",
+      "timestamp": "2026-06-01T12:25:18.935Z"
     },
     {
       "node_id": "N-M08",
@@ -600,12 +600,12 @@
       "new_value": "SUPERSEDED",
       "actor_id": "U-MEERA",
       "org_id": "supra",
-      "reason": "Cascade invalidation triggered by superseding N-M08 with N-M465",
+      "reason": "Cascade invalidation triggered by superseding N-M08 with N-M818",
       "metadata": {
-        "new_node_id": "N-M465"
+        "new_node_id": "N-M818"
       },
-      "id": "A-8LFHYJJ",
-      "timestamp": "2026-06-01T10:06:48.721Z"
+      "id": "A-W8ND880",
+      "timestamp": "2026-06-01T12:25:18.936Z"
     },
     {
       "node_id": "N-DRV-01",
@@ -619,8 +619,8 @@
         "depth": 1,
         "trigger_node_id": "N-M08"
       },
-      "id": "A-6E6GKI7",
-      "timestamp": "2026-06-01T10:06:48.728Z"
+      "id": "A-RWZ9L7R",
+      "timestamp": "2026-06-01T12:25:18.938Z"
     },
     {
       "node_id": "N-DRV-02",
@@ -634,8 +634,8 @@
         "depth": 1,
         "trigger_node_id": "N-M08"
       },
-      "id": "A-ERM5KLK",
-      "timestamp": "2026-06-01T10:06:48.736Z"
+      "id": "A-0DRWD0E",
+      "timestamp": "2026-06-01T12:25:18.939Z"
     },
     {
       "node_id": "N-DRV-03",
@@ -649,8 +649,8 @@
         "depth": 1,
         "trigger_node_id": "N-M08"
       },
-      "id": "A-73ZJVKT",
-      "timestamp": "2026-06-01T10:06:48.743Z"
+      "id": "A-YDWTU5C",
+      "timestamp": "2026-06-01T12:25:18.942Z"
     },
     {
       "node_id": "N-DRV-04",
@@ -664,8 +664,8 @@
         "depth": 1,
         "trigger_node_id": "N-M08"
       },
-      "id": "A-U1UIOFH",
-      "timestamp": "2026-06-01T10:06:48.752Z"
+      "id": "A-YRM7VPW",
+      "timestamp": "2026-06-01T12:25:18.943Z"
     },
     {
       "node_id": "N-DRV-05",
@@ -679,8 +679,8 @@
         "depth": 1,
         "trigger_node_id": "N-M08"
       },
-      "id": "A-UBRJ3NG",
-      "timestamp": "2026-06-01T10:06:48.758Z"
+      "id": "A-W3RSLTG",
+      "timestamp": "2026-06-01T12:25:18.945Z"
     },
     {
       "node_id": "N-DRV-06",
@@ -694,8 +694,8 @@
         "depth": 1,
         "trigger_node_id": "N-M08"
       },
-      "id": "A-VJPJ9WU",
-      "timestamp": "2026-06-01T10:06:48.766Z"
+      "id": "A-7RG5WNB",
+      "timestamp": "2026-06-01T12:25:18.947Z"
     },
     {
       "node_id": "N-HELD",
@@ -709,8 +709,8 @@
         "depth": 1,
         "trigger_node_id": "N-M08"
       },
-      "id": "A-FSY43P9",
-      "timestamp": "2026-06-01T10:06:48.770Z"
+      "id": "A-OGP71JK",
+      "timestamp": "2026-06-01T12:25:18.948Z"
     },
     {
       "node_id": "N-DRV-02-A",
@@ -724,8 +724,8 @@
         "depth": 2,
         "trigger_node_id": "N-M08"
       },
-      "id": "A-ZABBQKZ",
-      "timestamp": "2026-06-01T10:06:48.777Z"
+      "id": "A-44C7XRI",
+      "timestamp": "2026-06-01T12:25:18.949Z"
     },
     {
       "node_id": "N-DRV-04-A",
@@ -739,8 +739,8 @@
         "depth": 2,
         "trigger_node_id": "N-M08"
       },
-      "id": "A-LTP2OSN",
-      "timestamp": "2026-06-01T10:06:48.785Z"
+      "id": "A-0ZK4BJZ",
+      "timestamp": "2026-06-01T12:25:18.951Z"
     },
     {
       "node_id": "N-DRV-04-B",
@@ -754,8 +754,8 @@
         "depth": 2,
         "trigger_node_id": "N-M08"
       },
-      "id": "A-P11WGGE",
-      "timestamp": "2026-06-01T10:06:48.792Z"
+      "id": "A-29MUXPG",
+      "timestamp": "2026-06-01T12:25:18.952Z"
     },
     {
       "node_id": "N-DRV-01",
@@ -766,8 +766,8 @@
       "org_id": "supra",
       "reason": "Lactate monitoring schedule checked. Will update to v3 timing on next shift, but current schedule remains clinically safe.",
       "metadata": {},
-      "id": "A-SAM27DG",
-      "timestamp": "2026-06-01T10:06:48.866Z"
+      "id": "A-7GNT1NV",
+      "timestamp": "2026-06-01T12:25:18.971Z"
     }
   ],
   "pulse_alerts": [
@@ -779,9 +779,9 @@
       "title": "Sepsis Protocol v2 (2024) superseded. 9 decisions need review.",
       "body": "⛔ Sepsis Protocol v2 (2024) was updated by U-MEERA. This change has cascaded down the knowledge graph, placing 9 related items in medicine department into REVIEW_REQUIRED status.",
       "link": "/nodes/N-M08",
-      "id": "PL-J2OLOHE",
+      "id": "PL-ZHM0I6F",
       "is_read": false,
-      "created_at": "2026-06-01T10:06:48.801Z"
+      "created_at": "2026-06-01T12:25:18.954Z"
     },
     {
       "org_id": "supra",
@@ -791,9 +791,9 @@
       "title": "Sepsis Protocol v2 (2024) superseded. 9 decisions need review.",
       "body": "⛔ Sepsis Protocol v2 (2024) was updated by U-MEERA. This change has cascaded down the knowledge graph, placing 9 related items in medicine department into REVIEW_REQUIRED status.",
       "link": "/nodes/N-M08",
-      "id": "PL-3BISJ9H",
+      "id": "PL-ELHGTQ7",
       "is_read": false,
-      "created_at": "2026-06-01T10:06:48.805Z"
+      "created_at": "2026-06-01T12:25:18.955Z"
     },
     {
       "org_id": "supra",
@@ -803,9 +803,9 @@
       "title": "N-DRV-01 confirmed valid by Dr. Ananya (Junior)",
       "body": "ℹ️ Junior reviewer checked Lactate Monitoring Schedule and marked it ACTIVE. Reason: Lactate monitoring schedule checked. Will update to v3 timing on next shift, but current schedule remains clinically safe.",
       "link": "/nodes/N-DRV-01",
-      "id": "PL-B0VH19Z",
+      "id": "PL-JDP4M6H",
       "is_read": false,
-      "created_at": "2026-06-01T10:06:48.875Z"
+      "created_at": "2026-06-01T12:25:18.973Z"
     }
   ],
   "health_scores": {
@@ -815,7 +815,7 @@
       "freshness": 0.5294117647058824,
       "balance": 0.3488193175629837,
       "consistency": 0.5294117647058824,
-      "timestamp": "2026-06-01T10:06:48.870Z",
+      "timestamp": "2026-06-01T12:25:18.972Z",
       "pending": false,
       "department": "medicine"
     },
@@ -825,7 +825,7 @@
       "freshness": 1,
       "balance": 0.4,
       "consistency": 1,
-      "timestamp": "2026-06-01T10:06:48.670Z",
+      "timestamp": "2026-06-01T12:25:18.926Z",
       "pending": false,
       "department": "ortho"
     }

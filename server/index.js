@@ -332,6 +332,10 @@ app.post('/api/reset', (req, res) => {
 });
 
 // Start Express App
-app.listen(PORT, () => {
-  console.log(`BRAHMO Governance Express Server is running on port ${PORT}`);
+db.initDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`BRAHMO Governance Express Server is running on port ${PORT}`);
+  });
+}).catch(err => {
+  console.error("Failed to initialize database", err);
 });

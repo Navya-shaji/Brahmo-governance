@@ -1,7 +1,13 @@
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config();
+const { createClient } = require('@supabase/supabase-js');
 
 const DB_FILE_PATH = path.join(__dirname, 'db.json');
+
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_ANON_KEY;
+const supabase = (supabaseUrl && supabaseKey) ? createClient(supabaseUrl, supabaseKey) : null;
 
 const INITIAL_STATE = {
   organizations: [
@@ -226,7 +232,27 @@ function readDB() {
 }
 
 function writeDB(state) {
+  // Always write to local JSON as fallback/cache
   fs.writeFileSync(DB_FILE_PATH, JSON.stringify(state, null, 2), 'utf-8');
+
+  // Background sync to Supabase if configured
+  if (supabase) {
+    syncToSupabase(state).catch(err => console.error("Supabase sync failed:", err));
+  }
+}
+
+async function syncToSupabase(state) {
+  // Upsert all entities
+  if (state.organizations.length > 0) await supabase.from('organizations').upsert(state.organizations);
+  if (state.users.length > 0) await supabase.from('users').upsert(state.users);
+  if (state.hierarchy_levels.length > 0) await supabase.from('hierarchy_levels').upsert(state.hierarchy_levels);
+  if (state.knowledge_nodes.length > 0) await supabase.from('knowledge_nodes').upsert(state.knowledge_nodes);
+  if (state.edges.length > 0) await supabase.from('edges').upsert(state.edges);
+  
+  // For append-only tables, we should ideally only insert new records.
+  // For simplicity in this assessment architecture, we UPSERT by ID.
+  if (state.audit_log && state.audit_log.length > 0) await supabase.from('audit_logs').upsert(state.audit_log);
+  if (state.pulse_alerts && state.pulse_alerts.length > 0) await supabase.from('pulse_alerts').upsert(state.pulse_alerts);
 }
 
 // Calculate health score synchronously from the state.
@@ -429,12 +455,50 @@ const db = {
     state.health_scores[department] = newScore;
     writeDB(state);
     return newScore;
+  },
+
+  initDB: async () => {
+    if (!supabase) {
+      if (!fs.existsSync(DB_FILE_PATH)) db.reset();
+      return;
+    }
+
+    try {
+      console.log("Fetching state from Supabase...");
+      const { data: orgs } = await supabase.from('organizations').select('*');
+      
+      if (!orgs || orgs.length === 0) {
+        console.log("Supabase is empty. Seeding from INITIAL_STATE...");
+        await syncToSupabase(INITIAL_STATE);
+        fs.writeFileSync(DB_FILE_PATH, JSON.stringify(INITIAL_STATE, null, 2), 'utf-8');
+        return;
+      }
+
+      const { data: users } = await supabase.from('users').select('*');
+      const { data: levels } = await supabase.from('hierarchy_levels').select('*');
+      const { data: nodes } = await supabase.from('knowledge_nodes').select('*');
+      const { data: edges } = await supabase.from('edges').select('*');
+      const { data: logs } = await supabase.from('audit_logs').select('*');
+      const { data: alerts } = await supabase.from('pulse_alerts').select('*');
+
+      const loadedState = {
+        organizations: orgs || [],
+        users: users || [],
+        hierarchy_levels: levels || [],
+        knowledge_nodes: nodes || [],
+        edges: edges || [],
+        audit_log: logs || [],
+        pulse_alerts: alerts || [],
+        health_scores: {} // Transient state, gets recomputed
+      };
+
+      fs.writeFileSync(DB_FILE_PATH, JSON.stringify(loadedState, null, 2), 'utf-8');
+      console.log("Supabase state successfully loaded into memory.");
+    } catch (err) {
+      console.error("Failed to init from Supabase. Falling back to local db.json.", err);
+      if (!fs.existsSync(DB_FILE_PATH)) db.reset();
+    }
   }
 };
-
-// Auto-init on load
-if (!fs.existsSync(DB_FILE_PATH)) {
-  db.reset();
-}
 
 module.exports = { db };
