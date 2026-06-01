@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "jetro": {
+      "type": "stdio",
+      "command": "C:\\Users\\91859\\.jetro\\runtime\\node-win32-x64.exe",
+      "args": [
+        "C:\\Users\\91859\\.jetro\\mcp-server\\index.js"
+      ],
+      "env": {
+        "JET_WORKSPACE": "c:\\Users\\91859\\Desktop\\Brahmo-governance",
+        "JET_API_URL": "https://api.jetro.ai",
+        "PATH": "C:\\Users\\91859\\.jetro\\runtime;C:\\MinGW\\bin;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Windows\\System32\\OpenSSH\\;C:\\Program Files\\NVIDIA Corporation\\NVIDIA NvDLISR;C:\\MinGW;C:\\Users\\91859\\Desktop\\New folder (2)\\CUsers91859Downloadsx86_64-8.1.0-release-posix-seh-rt_v6-rev0.7zmingw64bin;C:\\Program Files\\Git\\cmd;C:\\Program Files\\MongoDB\\Server\\8.0\\bin;;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Program Files\\Docker\\Docker\\resources\\bin;C:\\Program Files\\cursor\\resources\\app\\bin;C:\\Program Files\\dotnet\\;C:\\Program Files\\nodejs\\;C:\\Users\\91859\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\91859\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\MinGW\\bin;C:\\Program Files\\MongoDB\\Server\\8.0\\bin;C:\\Users\\91859\\AppData\\Local\\Programs\\mongosh\\;C:\\Users\\91859\\AppData\\Local\\Programs\\Windsurf\\bin;C:\\Users\\91859\\AppData\\Local\\Programs\\Antigravity\\bin;C:\\Program Files (x86)\\mongodb-database-tools-windows-x86_64-100.14.0\\bin;C:\\Users\\91859\\AppData\\Roaming\\npm;C:\\Users\\91859\\AppData\\Local\\Programs\\Kiro\\bin;C:\\Users\\91859\\AppData\\Local\\Programs\\Antigravity IDE\\bin"
+      }
+    }
+  }
+}
