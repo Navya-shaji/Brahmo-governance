@@ -5,6 +5,9 @@ import CascadeTree from "./components/CascadeTree";
 import NodeDetailPanel from "./components/NodeDetailPanel";
 import type { KnowledgeNode, Edge, User, AuditLog, PulseAlert } from "./types";
 
+// In production (Vercel), point to the Render backend. In dev, use relative paths (Vite proxy handles it).
+const API_BASE = import.meta.env.VITE_API_URL || "";
+
 export default function App() {
   // Application state
   const [users, setUsers] = useState<User[]>([]);
@@ -42,7 +45,7 @@ export default function App() {
     try {
       setIsLoading(true);
       // Fetch users
-      const usersRes = await fetch("/api/users");
+      const usersRes = await fetch(`${API_BASE}/api/users`);
       const usersData = await usersRes.json();
       if (usersData.success) {
         setUsers(usersData.users);
@@ -56,28 +59,28 @@ export default function App() {
       }
 
       // Fetch all nodes
-      const nodesRes = await fetch("/api/nodes");
+      const nodesRes = await fetch(`${API_BASE}/api/nodes`);
       const nodesData = await nodesRes.json();
       if (nodesData.success) {
         setNodes(nodesData.nodes);
       }
 
       // Fetch edges
-      const edgesRes = await fetch("/api/edges");
+      const edgesRes = await fetch(`${API_BASE}/api/edges`);
       const edgesData = await edgesRes.json();
       if (edgesData.success) {
         setEdges(edgesData.edges);
       }
 
       // Fetch health score for current department
-      const healthRes = await fetch(`/api/health?department=${department}`);
+      const healthRes = await fetch(`${API_BASE}/api/health?department=${department}`);
       const healthData = await healthRes.json();
       if (healthData.success) {
         setHealthScore(healthData.score);
       }
 
       // Fetch audit logs
-      const auditRes = await fetch("/api/audit");
+      const auditRes = await fetch(`${API_BASE}/api/audit`);
       const auditData = await auditRes.json();
       if (auditData.success) {
         setAuditLogs(auditData.auditLogs);
@@ -92,7 +95,7 @@ export default function App() {
   // Load alerts when user swaps
   useEffect(() => {
     if (currentUser) {
-      fetch(`/api/alerts?userId=${currentUser.id}`)
+      fetch(`${API_BASE}/api/alerts?userId=${currentUser.id}`)
         .then((res) => res.json())
         .then((data) => {
           if (data.success) setAlerts(data.alerts);
@@ -115,7 +118,7 @@ export default function App() {
       logSys(
         `Forcing health score recalculation for ${activeDept} department...`,
       );
-      const res = await fetch("/api/health", {
+      const res = await fetch(`${API_BASE}/api/health`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ department: activeDept }),
@@ -128,7 +131,7 @@ export default function App() {
         );
         // Refresh alert list as recompute might have triggered warnings
         if (currentUser) {
-          const alertsRes = await fetch(`/api/alerts?userId=${currentUser.id}`);
+          const alertsRes = await fetch(`${API_BASE}/api/alerts?userId=${currentUser.id}`);
           const alertsData = await alertsRes.json();
           if (alertsData.success) setAlerts(alertsData.alerts);
         }
@@ -145,7 +148,7 @@ export default function App() {
     try {
       setIsLoading(true);
       logSys("Resetting database to seed state...");
-      const res = await fetch("/api/reset", { method: "POST" });
+      const res = await fetch(`${API_BASE}/api/reset`, { method: "POST" });
       const data = await res.json();
       if (data.success) {
         logSys("Database reset complete. Graph state refreshed.");
@@ -206,7 +209,7 @@ export default function App() {
       setIsLoading(true);
       logSys(`Executing action "${action}" on node ${selectedNodeId}...`);
 
-      const res = await fetch("/api/nodes", {
+      const res = await fetch(`${API_BASE}/api/nodes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
