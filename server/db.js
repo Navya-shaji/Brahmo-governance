@@ -242,17 +242,20 @@ function writeDB(state) {
 }
 
 async function syncToSupabase(state) {
-  // Upsert all entities
-  if (state.organizations.length > 0) await supabase.from('organizations').upsert(state.organizations);
-  if (state.users.length > 0) await supabase.from('users').upsert(state.users);
-  if (state.hierarchy_levels.length > 0) await supabase.from('hierarchy_levels').upsert(state.hierarchy_levels);
-  if (state.knowledge_nodes.length > 0) await supabase.from('knowledge_nodes').upsert(state.knowledge_nodes);
-  if (state.edges.length > 0) await supabase.from('edges').upsert(state.edges);
-  
-  // For append-only tables, we should ideally only insert new records.
-  // For simplicity in this assessment architecture, we UPSERT by ID.
-  if (state.audit_log && state.audit_log.length > 0) await supabase.from('audit_logs').upsert(state.audit_log);
-  if (state.pulse_alerts && state.pulse_alerts.length > 0) await supabase.from('pulse_alerts').upsert(state.pulse_alerts);
+  const upsert = async (table, data) => {
+    if (!data || data.length === 0) return;
+    const { error } = await supabase.from(table).upsert(data);
+    if (error) console.error(`Supabase upsert failed [${table}]:`, error.message);
+    else console.log(`  ✓ ${table}: ${data.length} rows synced`);
+  };
+
+  await upsert('organizations', state.organizations);
+  await upsert('users', state.users);
+  await upsert('hierarchy_levels', state.hierarchy_levels);
+  await upsert('knowledge_nodes', state.knowledge_nodes);
+  await upsert('edges', state.edges);
+  if (state.audit_log && state.audit_log.length > 0) await upsert('audit_logs', state.audit_log);
+  if (state.pulse_alerts && state.pulse_alerts.length > 0) await upsert('pulse_alerts', state.pulse_alerts);
 }
 
 // Calculate health score synchronously from the state.
@@ -470,6 +473,7 @@ const db = {
       if (!orgs || orgs.length === 0) {
         console.log("Supabase is empty. Seeding from INITIAL_STATE...");
         await syncToSupabase(INITIAL_STATE);
+        console.log("Supabase seeded successfully.");
         fs.writeFileSync(DB_FILE_PATH, JSON.stringify(INITIAL_STATE, null, 2), 'utf-8');
         return;
       }
