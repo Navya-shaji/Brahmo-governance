@@ -133,8 +133,8 @@
       "title": "Sepsis Protocol v2 (2024)",
       "content": "Supra Sepsis Bundle v2 (2024): blood cultures before antibiotics, lactate within 3 HOURS, 30mL/kg crystalloid for hypotension.",
       "importance": 0.95,
-      "status": "ACTIVE",
-      "superseded_by": null,
+      "status": "SUPERSEDED",
+      "superseded_by": "N-M369",
       "department": "medicine",
       "valid_until": null,
       "created_by": "U-MEERA",
@@ -163,7 +163,7 @@
       "title": "Night Shift Sepsis Screening",
       "content": "Night shift nurses screen for sepsis using qSOFA (based on Sepsis v2 parameters): altered mentation, RR >= 22, SBP <= 100.",
       "importance": 0.75,
-      "status": "ACTIVE",
+      "status": "REVIEW_REQUIRED",
       "superseded_by": null,
       "department": "medicine",
       "created_by": "U-MEERA",
@@ -178,7 +178,7 @@
       "title": "Empiric Antibiotic Selection",
       "content": "Based on Sepsis v2 bundle: Piperacillin-Tazobactam 4.5g IV within 3-hour window. Culture-guided de-escalation at 72 hours.",
       "importance": 0.82,
-      "status": "ACTIVE",
+      "status": "REVIEW_REQUIRED",
       "superseded_by": null,
       "department": "medicine",
       "valid_until": null,
@@ -193,7 +193,7 @@
       "title": "ICU Admission from Sepsis Screening",
       "content": "Patients meeting 2/3 qSOFA criteria with lactate > 2 mmol/L: assess for ICU admission within 1 hour.",
       "importance": 0.8,
-      "status": "ACTIVE",
+      "status": "REVIEW_REQUIRED",
       "superseded_by": null,
       "department": "medicine",
       "valid_until": null,
@@ -208,7 +208,7 @@
       "title": "Sepsis Mortality Tracking",
       "content": "Supra sepsis mortality Q3 2024: 18% (national average 22%). Improvement attributed to v2 bundle compliance reaching 78%.",
       "importance": 0.6,
-      "status": "ACTIVE",
+      "status": "REVIEW_REQUIRED",
       "superseded_by": null,
       "department": "medicine",
       "valid_until": null,
@@ -223,7 +223,7 @@
       "title": "Pharmacy Pre-Auth for IV Antibiotics",
       "content": "Per Sepsis v2 timing: pharmacy pre-authorizes Pip-Tazo for suspected sepsis. No approval delay within 3-hour window.",
       "importance": 0.72,
-      "status": "ACTIVE",
+      "status": "REVIEW_REQUIRED",
       "superseded_by": null,
       "department": "medicine",
       "valid_until": null,
@@ -238,7 +238,7 @@
       "title": "ICU Bed Reservation Protocol",
       "content": "Based on ICU admission criteria (N-DRV-04): reserve 2 ICU beds per shift for suspected sepsis admissions.",
       "importance": 0.65,
-      "status": "ACTIVE",
+      "status": "REVIEW_REQUIRED",
       "superseded_by": null,
       "department": "medicine",
       "valid_until": null,
@@ -253,7 +253,7 @@
       "title": "ICU Occupancy from Sepsis Admissions",
       "content": "ICU sepsis admissions average 3 per week (2024). Peak: 7 in monsoon season (water-borne infections).",
       "importance": 0.55,
-      "status": "ACTIVE",
+      "status": "REVIEW_REQUIRED",
       "superseded_by": null,
       "department": "medicine",
       "valid_until": null,
@@ -268,7 +268,7 @@
       "title": "Night Shift Escalation Timing",
       "content": "Night shift sepsis screening positive: call duty doctor within 15 minutes. If no response: escalate to HOD within 30 minutes.",
       "importance": 0.7,
-      "status": "ACTIVE",
+      "status": "REVIEW_REQUIRED",
       "superseded_by": null,
       "department": "medicine",
       "valid_until": null,
@@ -409,6 +409,21 @@
       "valid_until": "2025-01-01T00:00:00+05:30",
       "created_by": "U-MEERA",
       "created_at": "2024-07-01T09:00:00+05:30"
+    },
+    {
+      "id": "N-M369",
+      "org_id": "supra",
+      "hierarchy_level_id": "HL-05-MED",
+      "type": "DECISION",
+      "title": "Sepsis Protocol v3 (2026)",
+      "content": "Supra Sepsis Bundle v3 (2026): blood cultures before antibiotics, lactate measurement within 1 HOUR, 30mL/kg crystalloid for hypotension.",
+      "importance": 0.95,
+      "status": "ACTIVE",
+      "superseded_by": null,
+      "department": "medicine",
+      "valid_until": null,
+      "created_by": "U-MEERA",
+      "created_at": "2026-06-02T09:35:23.604Z"
     }
   ],
   "edges": [
@@ -516,6 +531,13 @@
       "target_id": "N-M02",
       "edge_type": "SUPERSEDES",
       "created_at": "2024-03-01T10:00:00+05:30"
+    },
+    {
+      "id": "E-85UN7MJ",
+      "source_id": "N-M369",
+      "target_id": "N-M08",
+      "edge_type": "SUPERSEDES",
+      "created_at": "2026-06-02T09:35:23.606Z"
     }
   ],
   "audit_log": [
@@ -542,17 +564,258 @@
       "reason": "Upgrade Sepsis Protocol to v2",
       "metadata": {},
       "timestamp": "2024-03-01T10:00:00+05:30"
+    },
+    {
+      "node_id": "N-M08",
+      "action": "SUPERSEDE",
+      "old_value": "ACTIVE",
+      "new_value": "SUPERSEDED",
+      "actor_id": "U-MEERA",
+      "org_id": "supra",
+      "reason": "Superseded by new node N-M369",
+      "metadata": {
+        "new_node_id": "N-M369"
+      },
+      "id": "A-HI1PKEL",
+      "timestamp": "2026-06-02T09:35:23.607Z"
+    },
+    {
+      "node_id": "N-M369",
+      "action": "CREATE",
+      "old_value": null,
+      "new_value": "ACTIVE",
+      "actor_id": "U-MEERA",
+      "org_id": "supra",
+      "reason": "Created to supersede N-M08",
+      "metadata": {
+        "supersedes_node_id": "N-M08"
+      },
+      "id": "A-PMW9M0D",
+      "timestamp": "2026-06-02T09:35:23.608Z"
+    },
+    {
+      "node_id": "N-M08",
+      "action": "CASCADE_TRIGGER",
+      "old_value": "SUPERSEDED",
+      "new_value": "SUPERSEDED",
+      "actor_id": "U-MEERA",
+      "org_id": "supra",
+      "reason": "Cascade invalidation triggered by superseding N-M08 with N-M369",
+      "metadata": {
+        "new_node_id": "N-M369"
+      },
+      "id": "A-V3FQBWV",
+      "timestamp": "2026-06-02T09:35:23.610Z"
+    },
+    {
+      "node_id": "N-DRV-01",
+      "action": "STATUS_CHANGE",
+      "old_value": "ACTIVE",
+      "new_value": "REVIEW_REQUIRED",
+      "actor_id": "U-MEERA",
+      "org_id": "supra",
+      "reason": "Cascade invalidation: derived from superseded node N-M08",
+      "metadata": {
+        "depth": 1,
+        "trigger_node_id": "N-M08"
+      },
+      "id": "A-DKS1O6A",
+      "timestamp": "2026-06-02T09:35:23.611Z"
+    },
+    {
+      "node_id": "N-DRV-02",
+      "action": "STATUS_CHANGE",
+      "old_value": "ACTIVE",
+      "new_value": "REVIEW_REQUIRED",
+      "actor_id": "U-MEERA",
+      "org_id": "supra",
+      "reason": "Cascade invalidation: derived from superseded node N-M08",
+      "metadata": {
+        "depth": 1,
+        "trigger_node_id": "N-M08"
+      },
+      "id": "A-2A13UBN",
+      "timestamp": "2026-06-02T09:35:23.613Z"
+    },
+    {
+      "node_id": "N-DRV-03",
+      "action": "STATUS_CHANGE",
+      "old_value": "ACTIVE",
+      "new_value": "REVIEW_REQUIRED",
+      "actor_id": "U-MEERA",
+      "org_id": "supra",
+      "reason": "Cascade invalidation: derived from superseded node N-M08",
+      "metadata": {
+        "depth": 1,
+        "trigger_node_id": "N-M08"
+      },
+      "id": "A-DI85567",
+      "timestamp": "2026-06-02T09:35:23.615Z"
+    },
+    {
+      "node_id": "N-DRV-04",
+      "action": "STATUS_CHANGE",
+      "old_value": "ACTIVE",
+      "new_value": "REVIEW_REQUIRED",
+      "actor_id": "U-MEERA",
+      "org_id": "supra",
+      "reason": "Cascade invalidation: derived from superseded node N-M08",
+      "metadata": {
+        "depth": 1,
+        "trigger_node_id": "N-M08"
+      },
+      "id": "A-8Y1ST85",
+      "timestamp": "2026-06-02T09:35:23.616Z"
+    },
+    {
+      "node_id": "N-DRV-05",
+      "action": "STATUS_CHANGE",
+      "old_value": "ACTIVE",
+      "new_value": "REVIEW_REQUIRED",
+      "actor_id": "U-MEERA",
+      "org_id": "supra",
+      "reason": "Cascade invalidation: derived from superseded node N-M08",
+      "metadata": {
+        "depth": 1,
+        "trigger_node_id": "N-M08"
+      },
+      "id": "A-LW46YRC",
+      "timestamp": "2026-06-02T09:35:23.618Z"
+    },
+    {
+      "node_id": "N-DRV-06",
+      "action": "STATUS_CHANGE",
+      "old_value": "ACTIVE",
+      "new_value": "REVIEW_REQUIRED",
+      "actor_id": "U-MEERA",
+      "org_id": "supra",
+      "reason": "Cascade invalidation: derived from superseded node N-M08",
+      "metadata": {
+        "depth": 1,
+        "trigger_node_id": "N-M08"
+      },
+      "id": "A-VA8ZYTD",
+      "timestamp": "2026-06-02T09:35:23.619Z"
+    },
+    {
+      "node_id": "N-HELD",
+      "action": "CASCADE_SKIP",
+      "old_value": "LEGAL_HOLD",
+      "new_value": "LEGAL_HOLD",
+      "actor_id": "SYSTEM",
+      "org_id": "supra",
+      "reason": "Node N-HELD skipped during cascade: LEGAL_HOLD status prevents status change.",
+      "metadata": {
+        "depth": 1,
+        "trigger_node_id": "N-M08"
+      },
+      "id": "A-PSN80LE",
+      "timestamp": "2026-06-02T09:35:23.620Z"
+    },
+    {
+      "node_id": "N-DRV-02-A",
+      "action": "STATUS_CHANGE",
+      "old_value": "ACTIVE",
+      "new_value": "REVIEW_REQUIRED",
+      "actor_id": "U-MEERA",
+      "org_id": "supra",
+      "reason": "Cascade invalidation: derived from superseded node N-M08",
+      "metadata": {
+        "depth": 2,
+        "trigger_node_id": "N-M08"
+      },
+      "id": "A-MENFAOE",
+      "timestamp": "2026-06-02T09:35:23.621Z"
+    },
+    {
+      "node_id": "N-DRV-04-A",
+      "action": "STATUS_CHANGE",
+      "old_value": "ACTIVE",
+      "new_value": "REVIEW_REQUIRED",
+      "actor_id": "U-MEERA",
+      "org_id": "supra",
+      "reason": "Cascade invalidation: derived from superseded node N-M08",
+      "metadata": {
+        "depth": 2,
+        "trigger_node_id": "N-M08"
+      },
+      "id": "A-GHT324B",
+      "timestamp": "2026-06-02T09:35:23.623Z"
+    },
+    {
+      "node_id": "N-DRV-04-B",
+      "action": "STATUS_CHANGE",
+      "old_value": "ACTIVE",
+      "new_value": "REVIEW_REQUIRED",
+      "actor_id": "U-MEERA",
+      "org_id": "supra",
+      "reason": "Cascade invalidation: derived from superseded node N-M08",
+      "metadata": {
+        "depth": 2,
+        "trigger_node_id": "N-M08"
+      },
+      "id": "A-Z0A57CZ",
+      "timestamp": "2026-06-02T09:35:23.624Z"
+    },
+    {
+      "node_id": "N-DRV-01",
+      "action": "REVIEW_CONFIRMED",
+      "old_value": "REVIEW_REQUIRED",
+      "new_value": "ACTIVE",
+      "actor_id": "U-ANANYA",
+      "org_id": "supra",
+      "reason": "Lactate monitoring schedule checked. Will update to v3 timing on next shift, but current schedule remains clinically safe.",
+      "metadata": {},
+      "id": "A-CZG4J32",
+      "timestamp": "2026-06-02T09:35:23.642Z"
     }
   ],
-  "pulse_alerts": [],
+  "pulse_alerts": [
+    {
+      "org_id": "supra",
+      "user_id": "U-MEERA",
+      "alert_type": "CASCADE",
+      "severity": "URGENT",
+      "title": "Sepsis Protocol v2 (2024) superseded. 9 decisions need review.",
+      "body": "⛔ Sepsis Protocol v2 (2024) was updated by U-MEERA. This change has cascaded down the knowledge graph, placing 9 related items in medicine department into REVIEW_REQUIRED status.",
+      "link": "/nodes/N-M08",
+      "id": "PL-N4ZLFOE",
+      "is_read": false,
+      "created_at": "2026-06-02T09:35:23.626Z"
+    },
+    {
+      "org_id": "supra",
+      "user_id": "U-ANANYA",
+      "alert_type": "CASCADE",
+      "severity": "URGENT",
+      "title": "Sepsis Protocol v2 (2024) superseded. 9 decisions need review.",
+      "body": "⛔ Sepsis Protocol v2 (2024) was updated by U-MEERA. This change has cascaded down the knowledge graph, placing 9 related items in medicine department into REVIEW_REQUIRED status.",
+      "link": "/nodes/N-M08",
+      "id": "PL-RRDKJCA",
+      "is_read": false,
+      "created_at": "2026-06-02T09:35:23.626Z"
+    },
+    {
+      "org_id": "supra",
+      "user_id": "U-MEERA",
+      "alert_type": "REVIEW_COMPLETED",
+      "severity": "INFO",
+      "title": "N-DRV-01 confirmed valid by Dr. Ananya (Junior)",
+      "body": "ℹ️ Junior reviewer checked Lactate Monitoring Schedule and marked it ACTIVE. Reason: Lactate monitoring schedule checked. Will update to v3 timing on next shift, but current schedule remains clinically safe.",
+      "link": "/nodes/N-DRV-01",
+      "id": "PL-XMMZIM0",
+      "is_read": false,
+      "created_at": "2026-06-02T09:35:23.644Z"
+    }
+  ],
   "health_scores": {
     "medicine": {
-      "overall": 0.8175,
+      "overall": 0.548440334100832,
       "coverage": 0.75,
-      "freshness": 1,
-      "balance": 0.4,
-      "consistency": 1,
-      "timestamp": "2026-06-01T13:04:18.802Z",
+      "freshness": 0.5294117647058824,
+      "balance": 0.3488193175629837,
+      "consistency": 0.5294117647058824,
+      "timestamp": "2026-06-02T09:35:23.643Z",
       "pending": false,
       "department": "medicine"
     },
@@ -562,7 +825,7 @@
       "freshness": 1,
       "balance": 0.4,
       "consistency": 1,
-      "timestamp": "2026-06-01T13:04:44.293Z",
+      "timestamp": "2026-06-02T09:35:23.599Z",
       "pending": false,
       "department": "ortho"
     }

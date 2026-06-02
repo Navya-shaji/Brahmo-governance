@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
+const fs = require('fs');
 const { db } = require('./db');
 const { validateTransition, runCascade, reviewNode } = require('./governance');
 
@@ -328,6 +330,24 @@ app.post('/api/reset', (req, res) => {
     res.json({ success: true, message: 'Database reset successfully', state });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Serve React client static assets in production
+const clientBuildPath = path.join(__dirname, '../client/dist');
+app.use(express.static(clientBuildPath));
+
+// Wildcard fallback for Single Page Application (SPA) client-side routing
+app.get('*', (req, res) => {
+  if (req.path.startsWith('/api')) {
+    return res.status(404).json({ success: false, error: 'API route not found' });
+  }
+
+  const indexPath = path.join(clientBuildPath, 'index.html');
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.send('BRAHMO Governance Server is running. Client assets not yet built.');
   }
 });
 
