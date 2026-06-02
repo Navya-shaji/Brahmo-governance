@@ -148,21 +148,24 @@ const db = {
   },
 
   reset: async () => {
-    const upsert = async (table, data) => {
-      if (!data || data.length === 0) return;
-      // Delete all rows first, then re-insert
-      await supabase.from(table).delete().neq('id', '__none__');
-      await supabase.from(table).upsert(data);
-    };
-    await upsert('organizations', INITIAL_STATE.organizations);
-    await upsert('users', INITIAL_STATE.users);
-    await upsert('hierarchy_levels', INITIAL_STATE.hierarchy_levels);
-    await upsert('knowledge_nodes', INITIAL_STATE.knowledge_nodes);
-    await upsert('edges', INITIAL_STATE.edges);
-    await supabase.from('audit_logs').delete().neq('id', '__none__');
-    await supabase.from('audit_logs').upsert(INITIAL_STATE.audit_log);
-    await supabase.from('pulse_alerts').delete().neq('id', '__none__');
-    // Clear in-memory health score cache
+    // Delete all rows from each table in correct dependency order
+    await supabase.from('pulse_alerts').delete().gte('created_at', '2000-01-01');
+    await supabase.from('audit_logs').delete().gte('timestamp', '2000-01-01');
+    await supabase.from('edges').delete().neq('id', '');
+    await supabase.from('knowledge_nodes').delete().neq('id', '');
+    await supabase.from('hierarchy_levels').delete().neq('id', '');
+    await supabase.from('users').delete().neq('id', '');
+    await supabase.from('organizations').delete().neq('id', '');
+
+    // Re-insert seed data
+    await supabase.from('organizations').insert(INITIAL_STATE.organizations);
+    await supabase.from('users').insert(INITIAL_STATE.users);
+    await supabase.from('hierarchy_levels').insert(INITIAL_STATE.hierarchy_levels);
+    await supabase.from('knowledge_nodes').insert(INITIAL_STATE.knowledge_nodes);
+    await supabase.from('edges').insert(INITIAL_STATE.edges);
+    await supabase.from('audit_logs').insert(INITIAL_STATE.audit_log);
+
+    // Clear health score cache
     Object.keys(healthScoreCache).forEach(k => delete healthScoreCache[k]);
     console.log('Database reset to initial state.');
     return INITIAL_STATE;
