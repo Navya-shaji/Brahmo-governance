@@ -167,7 +167,7 @@ export default function App() {
   // Handle Alert Read
   const handleMarkAlertRead = async (alertId: string) => {
     try {
-      const res = await fetch("/api/alerts", {
+      const res = await fetch(`${API_BASE}/api/alerts`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ alertId }),
@@ -187,7 +187,7 @@ export default function App() {
   const handleMarkAllAlertsRead = async () => {
     if (!currentUser) return;
     try {
-      const res = await fetch("/api/alerts", {
+      const res = await fetch(`${API_BASE}/api/alerts`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId: currentUser.id, markAll: true }),
@@ -248,7 +248,7 @@ export default function App() {
       setIsLoading(true);
       logSys("Initiating Sepsis Protocol v2 -> v3 Supersession cascade...");
 
-      const res = await fetch("/api/cascade", {
+      const res = await fetch(`${API_BASE}/api/cascade`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -304,7 +304,7 @@ export default function App() {
         "Initiating Surprise Test: Superseding DVT Prophylaxis Protocol (N-O01) in Ortho...",
       );
 
-      const res = await fetch("/api/cascade", {
+      const res = await fetch(`${API_BASE}/api/cascade`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
